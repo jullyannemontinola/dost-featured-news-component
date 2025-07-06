@@ -33,6 +33,23 @@ include_once('inc/banner.php');
 				</div>
 			</div>
 		</div>
+		
+		<!-- Archived News Section -->
+		<div class="container-main" role="document">
+			<div class="row">
+				<div class="large-12 columns">
+					<?php 
+					// Display the Archived News modular content box
+					get_template_part( 'template-parts/modular-content-box', null, array(
+						'title' => 'ARCHIVED NEWS',
+						'class' => 'archived-news-section',
+						'content_class' => 'archived-news-content',
+						'template_part' => 'template-parts/content-archive'
+					) ); 
+					?>
+				</div>
+			</div>
+		</div>
 
 
 
