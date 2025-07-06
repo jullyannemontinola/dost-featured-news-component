@@ -1312,7 +1312,7 @@ body {
 .single-post-separator {
     width: 100%;
     height: 2px;
-    background: var(--color-blue) 0%;
+    background: var(--color-blue);
     margin-bottom: 30px;
 }
 
