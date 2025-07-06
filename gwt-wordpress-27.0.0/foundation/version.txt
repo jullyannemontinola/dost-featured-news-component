@@ -1,0 +1,11 @@
+/************************************************
+*						*
+*		   				*
+*		 GWT 27.0.0			*
+*						*
+*						*
+************************************************/
+Theme Name:	gwt-wordpress 27.0.0
+Theme Version:  27.0.0v2
+Author:		JK | GWHS
+Author email:	gwhssupport@dict.gov.ph

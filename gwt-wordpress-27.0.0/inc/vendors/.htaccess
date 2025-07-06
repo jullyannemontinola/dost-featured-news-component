@@ -1,0 +1,8 @@
+# Prevent all access to log files
+<FilesMatch "\.txt$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
