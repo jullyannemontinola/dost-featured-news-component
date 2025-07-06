@@ -46,18 +46,33 @@ get_header(); ?>
                     <h1 class="single-post-title"><?php the_title(); ?></h1>
                 </header>
 
-                <!-- Print Button -->
-                <div class="single-post-print-section">
-                    <?php 
-                    $button_args = array(
-                        'url' => '#',
-                        'text' => '🖨️ Print Article',
-                        'class' => 'btn-print-article',
-                        'target' => '_self',
-                        'aria_label' => 'Print this article'
-                    );
-                    include(locate_template('template-parts/components/read-more-button.php'));
-                    ?>
+                <!-- Print Button and Go Back Button -->
+                <div class="single-post-buttons-section">
+                    <div class="single-post-print-button">
+                        <?php 
+                        $button_args = array(
+                            'url' => '#',
+                            'text' => '🖨️ Print Article',
+                            'class' => 'btn-print-article',
+                            'target' => '_self',
+                            'aria_label' => 'Print this article'
+                        );
+                        include(locate_template('template-parts/components/read-more-button.php'));
+                        ?>
+                    </div>
+                    
+                    <div class="single-post-back-button">
+                        <?php 
+                        $button_args = array(
+                            'url' => '#',
+                            'text' => '← Go Back to Previous Page',
+                            'class' => 'btn-go-back',
+                            'target' => '_self',
+                            'aria_label' => 'Go back to previous page'
+                        );
+                        include(locate_template('template-parts/components/read-more-button.php'));
+                        ?>
+                    </div>
                 </div>
 
                 <!-- Meta Information: Published Date | Number of Views -->
@@ -104,6 +119,20 @@ get_header(); ?>
                     ?>
                 </div>
 
+                <!-- Go Back Button (End of Content) -->
+                <div class="single-post-back-end-section">
+                    <?php 
+                    $button_args = array(
+                        'url' => '#',
+                        'text' => '← Go Back to Previous Page',
+                        'class' => 'btn-go-back-end',
+                        'target' => '_self',
+                        'aria_label' => 'Go back to previous page'
+                    );
+                    include(locate_template('template-parts/components/read-more-button.php'));
+                    ?>
+                </div>
+
             </article>
 
         <?php endwhile; ?>
@@ -125,6 +154,21 @@ document.addEventListener('DOMContentLoaded', function() {
             window.print();
         });
     }
+    
+    // Go back functionality for both go back buttons
+    const goBackButtons = document.querySelectorAll('.btn-go-back, .btn-go-back-end');
+    goBackButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Check if there's a previous page in history
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                // Fallback to home page if no history
+                window.location.href = '/';
+            }
+        });
+    });
 });
 </script>
 
