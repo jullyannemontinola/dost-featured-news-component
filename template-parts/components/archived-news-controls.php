@@ -7,12 +7,12 @@
  * @since Government Website Template 2.0
  */
 
-// Get configuration passed from parent
+// get configuration passed from parent
 $config = isset($config) ? $config : array();
 $current_year = isset($_GET['archive_year']) ? sanitize_text_field($_GET['archive_year']) : $config['default_year'];
 $current_page = isset($_GET['archive_page']) ? max(1, intval($_GET['archive_page'])) : 1;
 
-// Get total posts for the current year to calculate pagination
+// get total posts for the current year to calculate pagination
 $posts_query = new WP_Query(array(
     'post_type' => $config['post_type'],
     'posts_per_page' => -1,

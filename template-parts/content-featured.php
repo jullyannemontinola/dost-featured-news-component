@@ -7,7 +7,7 @@
  * @since Government Website Template 2.0
  */
 
-// Get featured posts for the news section
+// get featured posts for the news section
 $featured_posts = get_posts(array(
     'post_type' => 'post',
     'posts_per_page' => 5,
@@ -16,7 +16,8 @@ $featured_posts = get_posts(array(
     'post_status' => 'publish'
 ));
 
-// If no featured posts found, get latest posts
+// if no featured posts found, get latest posts
+// might delete this to ensure only featured posts are shown
 if (empty($featured_posts)) {
     $featured_posts = get_posts(array(
         'post_type' => 'post',
@@ -25,7 +26,7 @@ if (empty($featured_posts)) {
     ));
 }
 
-// Prepare post data for JavaScript
+// prepare post data for JavaScript
 $post_data = array();
 foreach ($featured_posts as $post) {
     $post_data[] = array(
@@ -46,14 +47,14 @@ foreach ($featured_posts as $post) {
     <div class="featured-news-inner">
         <div class="featured-news-main">
             <?php 
-            // Load the Hero Section component
+            // load the hero section component
             include(locate_template('template-parts/components/hero-section.php'));
             ?>
         </div>
         
         <div class="featured-news-sidebar">
             <?php 
-            // Load the Featured Stories Sidebar component
+            // load the featured stories sidebar component
             include(locate_template('template-parts/components/featured-stories-sidebar.php'));
             ?>
         </div>
@@ -61,7 +62,7 @@ foreach ($featured_posts as $post) {
 </div>
 
 <script>
-// Initialize Featured News functionality
+// initialize featured news functionality
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof window.FeaturedNews !== 'undefined') {
         window.FeaturedNews.init();

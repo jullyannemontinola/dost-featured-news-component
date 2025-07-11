@@ -7,7 +7,7 @@
  * @since Government Website Template 2.0
  */
 
-// Get configuration from arguments or use defaults for news
+// get configuration from arguments or use defaults for news
 $config = isset($args) ? $args : array();
 $default_config = array(
     'post_type' => 'post',
@@ -26,7 +26,7 @@ $default_config = array(
 
 $config = array_merge($default_config, $config);
 
-// Get available years from posts
+// get available years from posts
 $available_years = array();
 $years_query = new WP_Query(array(
     'post_type' => $config['post_type'],
@@ -45,10 +45,10 @@ if ($years_query->have_posts()) {
 }
 wp_reset_postdata();
 
-// Sort years in descending order
+// sort years in descending order
 rsort($available_years);
 
-// Create dropdown options from available years
+// create dropdown options from available years
 $dropdown_options = array();
 foreach ($available_years as $year) {
     $dropdown_options[$year] = $year . ' News';
@@ -67,7 +67,7 @@ if (!empty($dropdown_options)) {
     <!-- Controls Section (Dropdown + Pagination) -->
     <div class="archived-controls-section">
         <?php 
-        // Load the Controls component
+        // load the controls component
         include(locate_template('template-parts/components/archived-news-controls.php'));
         ?>
     </div>
@@ -75,7 +75,7 @@ if (!empty($dropdown_options)) {
     <!-- News Grid Section -->
     <div class="archived-news-grid" id="<?php echo esc_attr($config['section_id']); ?>-grid">
         <?php 
-        // Load the News Grid component
+        // load the news grid component
         include(locate_template('template-parts/components/archived-news-grid.php'));
         ?>
     </div>
@@ -83,14 +83,14 @@ if (!empty($dropdown_options)) {
     <!-- Progress Controls Section (Slider + Start/End buttons) -->
     <div class="archived-progress-section">
         <?php 
-        // Load the Progress Controls component
+        // load the progress controls component
         include(locate_template('template-parts/components/archived-progress-controls.php'));
         ?>
     </div>
 </div>
 
 <script>
-// Initialize Archived News functionality
+// initialize archived news functionality
 document.addEventListener('DOMContentLoaded', function() {
     if (typeof window.ArchivedNews !== 'undefined') {
         window.ArchivedNews.init('<?php echo esc_js($config['section_id']); ?>');

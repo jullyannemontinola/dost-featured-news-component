@@ -7,7 +7,7 @@
  * @since Government Website Template 2.0
  */
 
-// Get the first post as default or from AJAX request
+// get the first post as default or from AJAX request
 global $featured_posts;
 if (empty($featured_posts)) {
     $featured_posts = get_posts(array(
@@ -54,7 +54,7 @@ $post_views = get_post_meta($post_id, 'post_views_count', true) ?: '0';
         </div>
         
         <?php 
-        // Load the Read More Button component
+        // load the Read More Button component
         include(locate_template('template-parts/components/read-more-button.php'));
         ?>
     </div>

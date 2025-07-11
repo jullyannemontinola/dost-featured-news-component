@@ -12,40 +12,40 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Enqueue child theme styles and scripts
+ * enqueue child theme styles and scripts
  */
 function gwt_child_enqueue_styles() {
-    // Enqueue parent theme styles
+    // enqueue parent theme styles
     wp_enqueue_style('parent-style', get_template_directory_uri() . '/style.css');
     
-    // Enqueue child theme styles
+    // enqueue child theme styles
     wp_enqueue_style('child-style', get_stylesheet_directory_uri() . '/style.css', array('parent-style'), wp_get_theme()->get('Version'));
     
-    // Enqueue featured news JavaScript
+    // enqueue featured news javascript
     wp_enqueue_script('featured-news-js', get_stylesheet_directory_uri() . '/js/featured-news.js', array('jquery'), '1.0.0', true);
     
-    // Enqueue archived news JavaScript
+    // enqueue archived news javascript
     wp_enqueue_script('archived-news-js', get_stylesheet_directory_uri() . '/js/archived-news.js', array('jquery'), '1.0.0', true);
     
-    // Localize script for AJAX
+    // localize script for AJAX
     wp_localize_script('featured-news-js', 'featuredNewsAjax', array(
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('featured_news_nonce')
     ));
     
-    // Localize script for archived news AJAX
+    // localize script for archived news AJAX
     wp_localize_script('archived-news-js', 'ajax_object', array(
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('archived_news_nonce')
     ));
     
-    // Also add global variables for compatibility
+    // also add global variables for compatibility
     wp_add_inline_script('featured-news-js', '
         window.ajaxurl = "' . admin_url('admin-ajax.php') . '";
         window.featuredNewsNonce = "' . wp_create_nonce('featured_news_nonce') . '";
     ', 'before');
     
-    // Add global variables for archived news
+    // add global variables for archived news
     wp_add_inline_script('archived-news-js', '
         window.ajax_object = window.ajax_object || {};
         window.ajax_object.ajax_url = "' . admin_url('admin-ajax.php') . '";
@@ -77,7 +77,7 @@ function get_featured_post_data() {
         return;
     }
     
-    // Get post data
+    // get post data
     $post_data = array(
         'id' => $post_id,
         'title' => get_the_title($post_id),
@@ -94,7 +94,7 @@ add_action('wp_ajax_get_featured_post_data', 'get_featured_post_data');
 add_action('wp_ajax_nopriv_get_featured_post_data', 'get_featured_post_data');
 
 /**
- * Add custom meta box for featured news
+ * add custom meta box for featured news
  */
 function add_featured_news_meta_box() {
     add_meta_box(
@@ -109,7 +109,7 @@ function add_featured_news_meta_box() {
 add_action('add_meta_boxes', 'add_featured_news_meta_box');
 
 /**
- * Featured news meta box callback
+ * featured news meta box callback
  */
 function featured_news_meta_box_callback($post) {
     wp_nonce_field('featured_news_meta_box', 'featured_news_meta_box_nonce');
@@ -124,7 +124,7 @@ function featured_news_meta_box_callback($post) {
 }
 
 /**
- * Save featured news meta
+ * save featured news meta
  */
 function save_featured_news_meta($post_id) {
     if (!isset($_POST['featured_news_meta_box_nonce'])) {
@@ -149,7 +149,7 @@ function save_featured_news_meta($post_id) {
 add_action('save_post', 'save_featured_news_meta');
 
 /**
- * Track post views
+ * track post views
  */
 function track_post_views($post_id) {
     if (!is_single()) return;
@@ -187,7 +187,7 @@ function load_archived_posts() {
         return;
     }
     
-    // Query posts for the specified year and page
+    // query posts for the specified year and page
     $args = array(
         'post_type' => 'post',
         'posts_per_page' => $posts_per_page,
@@ -205,15 +205,15 @@ function load_archived_posts() {
     $query = new WP_Query($args);
     $total_pages = $query->max_num_pages;
     
-    // Generate HTML for the grid
+    // generate HTML for the grid
     ob_start();
     
-    // Set up global query data for template parts
+    // set up global query data for template parts
     global $wp_query;
     $original_query = $wp_query;
     $wp_query = $query;
     
-    // Use the archived news grid component to generate HTML
+    // use the archived news grid component to generate HTML
     $config = array(
         'post_type' => 'post',
         'posts_per_page' => $posts_per_page,
@@ -284,7 +284,7 @@ function load_archived_posts() {
                     <!-- Read More Button -->
                     <div class="archived-news-action">
                         <?php 
-                        // Set up button arguments for the modular component
+                        // set up button arguments for the modular component
                         $button_args = array(
                             'url' => get_permalink(),
                             'text' => 'Read More →',
@@ -315,11 +315,11 @@ function load_archived_posts() {
     
     $html = ob_get_clean();
     
-    // Restore original query
+    // restore original query
     $wp_query = $original_query;
     wp_reset_postdata();
     
-    // Calculate total posts for this year
+    // calculate total posts for this year
     $total_query = new WP_Query(array(
         'post_type' => 'post',
         'posts_per_page' => -1,
@@ -334,7 +334,7 @@ function load_archived_posts() {
     $total_posts = $total_query->found_posts;
     wp_reset_postdata();
     
-    // Send response
+    // send response
     wp_send_json_success(array(
         'html' => $html,
         'current_page' => $page,
@@ -348,7 +348,7 @@ add_action('wp_ajax_load_archived_posts', 'load_archived_posts');
 add_action('wp_ajax_nopriv_load_archived_posts', 'load_archived_posts');
 
 /**
- * Helper function to format views count for archived news
+ * helper function to format views count for archived news
  */
 function format_archived_views_count($views) {
     if ($views >= 1000000) {

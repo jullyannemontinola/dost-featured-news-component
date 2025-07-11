@@ -7,12 +7,7 @@ Version: 1.0.0
 Text Domain: gwt-child
 */
 
-/* 
-=============================================================================
-   CHILD THEME CUSTOM STYLES
-   Add your custom CSS below this line
-=============================================================================
-*/
+
 
 /* =============================================================================
    DESIGN SYSTEM - TYPOGRAPHY & COLORS
@@ -177,11 +172,11 @@ body {
 }
 
 .content-box-body {
-    padding: 0; /* No padding as specified */
+    padding: 0; 
     background-color: #ffffff;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
     .modular-content-box {
         margin-bottom: 20px;
@@ -197,7 +192,6 @@ body {
         width: 3px;
     }
     
-    /* Responsive typography */
     h1 {
         font-size: 2rem;
     }
@@ -414,7 +408,7 @@ body {
     background-color: var(--color-white);
 }
 
-/* Alternating background colors */
+
 .story-item:nth-child(even) {
     background-color: #f8f9fa;
 }

@@ -22,7 +22,7 @@ include_once('inc/banner.php');
 			<div class="row">
 				<div class="large-12 columns">
 					<?php 
-					// Display the Featured News modular content box
+					// Featured News modular content box
 					get_template_part( 'template-parts/modular-content-box', null, array(
 						'title' => 'FEATURED NEWS',
 						'class' => 'featured-news-section',
@@ -39,7 +39,7 @@ include_once('inc/banner.php');
 			<div class="row">
 				<div class="large-12 columns">
 					<?php 
-					// Display the Archived News modular content box
+					// archived news modular content box
 					get_template_part( 'template-parts/modular-content-box', null, array(
 						'title' => 'ARCHIVED NEWS',
 						'class' => 'archived-news-section',

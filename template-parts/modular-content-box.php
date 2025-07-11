@@ -6,7 +6,7 @@
  * @since Government Website Template 2.0
  */
 
-// Get the section title from the passed arguments or use default
+// get the section title from the passed arguments or use default
 $section_title = isset($args['title']) ? $args['title'] : 'FEATURED NEWS';
 $section_class = isset($args['class']) ? $args['class'] : 'featured-news-section';
 $content_class = isset($args['content_class']) ? $args['content_class'] : 'content-box-inner';
@@ -18,15 +18,15 @@ $content_class = isset($args['content_class']) ? $args['content_class'] : 'conte
     </div>
     <div class="content-box-body <?php echo esc_attr($content_class); ?>">
         <?php 
-        // This is where the inner content will be loaded
-        // Content will be passed through $args['content'] or loaded via action hooks
+        // this is where the inner content will be loaded
+        // content will be passed through $args['content'] or loaded via action hooks
         if (isset($args['content'])) {
             echo $args['content'];
         } elseif (isset($args['template_part'])) {
-            // Load a specific template part for the content
+            // load a specific template part for the content
             get_template_part($args['template_part']);
         } else {
-            // Allow other parts to hook into this content area
+            // allow other parts to hook into this content area
             do_action('modular_content_box_content', $args);
         }
         ?>

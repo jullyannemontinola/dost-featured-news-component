@@ -7,12 +7,12 @@
  * @since Government Website Template 2.0
  */
 
-// Get configuration passed from parent
+// get configuration passed from parent
 $config = isset($config) ? $config : array();
 $current_year = isset($_GET['archive_year']) ? sanitize_text_field($_GET['archive_year']) : $config['default_year'];
 $current_page = isset($_GET['archive_page']) ? max(1, intval($_GET['archive_page'])) : 1;
 
-// Query posts for the current year and page
+// query posts for the current year and page
 $posts_query = new WP_Query(array(
     'post_type' => $config['post_type'],
     'posts_per_page' => $config['posts_per_page'],
@@ -27,13 +27,13 @@ $posts_query = new WP_Query(array(
     'order' => 'DESC'
 ));
 
-// Function to get post views (same as featured news)
+// function to get post views (same as featured news)
 function get_post_views($post_id) {
     $views = get_post_meta($post_id, 'post_views', true);
     return $views ? intval($views) : 0;
 }
 
-// Function to format views count
+// function to format views count
 function format_views_count($views) {
     if ($views >= 1000000) {
         return number_format($views / 1000000, 1) . 'M';
@@ -57,7 +57,7 @@ function format_views_count($views) {
                 if (empty($excerpt)) {
                     $excerpt = wp_trim_words(get_the_content(), 25, '...');
                 }
-                // Limit excerpt to 100 characters for better consistency
+                // limit excerpt to 100 characters for better consistency
                 if (strlen($excerpt) > 100) {
                     $excerpt = substr($excerpt, 0, 97) . '...';
                 }

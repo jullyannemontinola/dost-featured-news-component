@@ -16,7 +16,7 @@ window.ArchivedNews = (function() {
     function init(id) {
         sectionId = id || 'archived-news';
         
-        // Get the archived news wrapper
+        // get the archived news wrapper
         const wrapper = document.querySelector(`[data-section-id="${sectionId}"]`);
         if (!wrapper) {
             console.log(`Archived news wrapper with section ID '${sectionId}' not found`);
@@ -32,31 +32,30 @@ window.ArchivedNews = (function() {
         
         console.log('Archived News initialized with config:', currentConfig);
         
-        // Initialize event listeners
+        // initialize event listeners
         initEventListeners();
         
-        // Initialize progress slider
+        // initialize progress slider
         initProgressSlider();
     }
     
+    // sets up event handlers for user interactions
     function initEventListeners() {
-        // Year dropdown change
-        const yearDropdown = document.querySelector(`[data-section-id="${sectionId}"].archived-year-dropdown`);
+        // year dropdown change
+        const yearDropdown = document.querySelector(`[data-section-id="${sectionId}"] .archived-year-dropdown`);
         if (yearDropdown) {
             yearDropdown.addEventListener('change', handleYearChange);
         }
         
-        // Pagination controls
-        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"].archived-pagination`);
+        // pagination controls
+        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"] .archived-pagination`);
         if (paginationContainer) {
-            // Pagination buttons
             paginationContainer.addEventListener('click', handlePaginationClick);
         }
         
-        // Progress controls
-        const progressControls = document.querySelector(`[data-section-id="${sectionId}"].archived-progress-controls`);
+        // progress controls
+        const progressControls = document.querySelector(`[data-section-id="${sectionId}"] .archived-progress-controls`);
         if (progressControls) {
-            // Start/End buttons
             const startBtn = progressControls.querySelector('.progress-start');
             const endBtn = progressControls.querySelector('.progress-end');
             
@@ -64,12 +63,15 @@ window.ArchivedNews = (function() {
                 startBtn.addEventListener('click', () => navigateToPage(1));
             }
             if (endBtn) {
-                const totalPages = parseInt(progressControls.dataset.totalPages) || 1;
-                endBtn.addEventListener('click', () => navigateToPage(totalPages));
+                endBtn.addEventListener('click', () => {
+                    const totalPages = getTotalPages();
+                    navigateToPage(totalPages);
+                });
             }
         }
     }
     
+    // creates draggable progress slider
     function initProgressSlider() {
         const sliderHandle = document.querySelector(`[data-section-id="${sectionId}"] .progress-slider-handle`);
         const sliderTrack = document.querySelector(`[data-section-id="${sectionId}"] .progress-slider-track`);
@@ -78,17 +80,17 @@ window.ArchivedNews = (function() {
         
         let isDragging = false;
         
-        // Mouse events
+        // mouse events
         sliderHandle.addEventListener('mousedown', startDrag);
         document.addEventListener('mousemove', handleDrag);
         document.addEventListener('mouseup', endDrag);
         
-        // Touch events for mobile
+        // touch events for mobile
         sliderHandle.addEventListener('touchstart', startDrag);
         document.addEventListener('touchmove', handleDrag);
         document.addEventListener('touchend', endDrag);
         
-        // Click on track to jump to position
+        // click on track to jump to position
         sliderTrack.addEventListener('click', handleTrackClick);
         
         function startDrag(e) {
@@ -114,9 +116,8 @@ window.ArchivedNews = (function() {
             isDragging = false;
             sliderHandle.classList.remove('dragging');
             
-            // Calculate which page to navigate to based on final position
-            const progressControls = document.querySelector(`[data-section-id="${sectionId}"].archived-progress-controls`);
-            const totalPages = parseInt(progressControls?.dataset.totalPages) || 1;
+            // calculate which page to navigate to based on final position
+            const totalPages = getTotalPages();
             const percentage = parseFloat(sliderHandle.style.left) || 0;
             const targetPage = Math.max(1, Math.min(totalPages, Math.round((percentage / 100) * totalPages)));
             
@@ -130,9 +131,7 @@ window.ArchivedNews = (function() {
             
             const rect = sliderTrack.getBoundingClientRect();
             const percentage = ((e.clientX - rect.left) / rect.width) * 100;
-            
-            const progressControls = document.querySelector(`[data-section-id="${sectionId}"].archived-progress-controls`);
-            const totalPages = parseInt(progressControls?.dataset.totalPages) || 1;
+            const totalPages = getTotalPages();
             const targetPage = Math.max(1, Math.min(totalPages, Math.round((percentage / 100) * totalPages)));
             
             navigateToPage(targetPage);
@@ -155,7 +154,7 @@ window.ArchivedNews = (function() {
         const selectedYear = e.target.value;
         console.log('Year changed to:', selectedYear);
         
-        // Reset to page 1 when year changes
+        // reset to page 1 when year changes
         loadContent(selectedYear, 1);
     }
     
@@ -180,22 +179,23 @@ window.ArchivedNews = (function() {
     }
     
     function navigateToPage(page) {
-        const yearDropdown = document.querySelector(`[data-section-id="${sectionId}"].archived-year-dropdown`);
+        const yearDropdown = document.querySelector(`[data-section-id="${sectionId}"] .archived-year-dropdown`);
         const selectedYear = yearDropdown ? yearDropdown.value : currentConfig.default_year;
         
         loadContent(selectedYear, page);
     }
     
     function getCurrentPage() {
-        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"].archived-pagination`);
+        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"] .archived-pagination`);
         return parseInt(paginationContainer?.dataset.currentPage) || 1;
     }
     
     function getTotalPages() {
-        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"].archived-pagination`);
+        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"] .archived-pagination`);
         return parseInt(paginationContainer?.dataset.totalPages) || 1;
     }
     
+    // handle AJAX requests for content loading
     function loadContent(year, page) {
         if (isLoading) return;
         
@@ -204,7 +204,7 @@ window.ArchivedNews = (function() {
         isLoading = true;
         showLoadingState();
         
-        // Use AJAX to load new content
+        // use AJAX to load new content
         const data = new FormData();
         data.append('action', currentConfig.ajax_action || 'load_archived_posts');
         data.append('year', year);
@@ -233,29 +233,29 @@ window.ArchivedNews = (function() {
         
         const data = response.data;
         
-        // Update the grid content
+        // update the grid content
         const gridContainer = document.querySelector(`#${sectionId}-grid`);
         if (gridContainer && data.html) {
             gridContainer.innerHTML = data.html;
         }
         
-        // Update pagination controls
+        // update pagination controls
         updatePaginationControls(data.current_page, data.total_pages);
         
-        // Update progress controls
+        // update progress controls
         updateProgressControls(data.current_page, data.total_pages);
         
-        // Update URL without page reload
+        // update URL without page reload
         updateURL(data.year, data.current_page);
         
-        // Scroll to the content area
+        // scroll to the content area
         scrollToContent();
     }
     
     function handleLoadError(error) {
         console.error('Error loading archived news content:', error);
         
-        // Show error message
+        // show error message
         const gridContainer = document.querySelector(`#${sectionId}-grid`);
         if (gridContainer) {
             gridContainer.innerHTML = `
@@ -273,14 +273,15 @@ window.ArchivedNews = (function() {
         }
     }
     
+    // update pagination controls ui state
     function updatePaginationControls(currentPage, totalPages) {
-        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"].archived-pagination`);
+        const paginationContainer = document.querySelector(`[data-section-id="${sectionId}"] .archived-pagination`);
         if (!paginationContainer) return;
         
         paginationContainer.dataset.currentPage = currentPage;
         paginationContainer.dataset.totalPages = totalPages;
         
-        // Update prev/next buttons
+        // update prev/next buttons
         const prevBtn = paginationContainer.querySelector('.pagination-prev');
         const nextBtn = paginationContainer.querySelector('.pagination-next');
         
@@ -291,21 +292,22 @@ window.ArchivedNews = (function() {
             nextBtn.disabled = currentPage >= totalPages;
         }
         
-        // Update page info
+        // update page info
         const pageInfo = paginationContainer.querySelector('.pagination-info');
         if (pageInfo) {
             pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
         }
     }
     
+    // update progress controls ui state
     function updateProgressControls(currentPage, totalPages) {
-        const progressControls = document.querySelector(`[data-section-id="${sectionId}"].archived-progress-controls`);
+        const progressControls = document.querySelector(`[data-section-id="${sectionId}"] .archived-progress-controls`);
         if (!progressControls) return;
         
         progressControls.dataset.currentPage = currentPage;
         progressControls.dataset.totalPages = totalPages;
         
-        // Update start/end buttons
+        // update start/end buttons
         const startBtn = progressControls.querySelector('.progress-start');
         const endBtn = progressControls.querySelector('.progress-end');
         
@@ -316,23 +318,23 @@ window.ArchivedNews = (function() {
             endBtn.disabled = currentPage >= totalPages;
         }
         
-        // Update progress slider
+        // update progress slider
         const percentage = totalPages > 0 ? (currentPage / totalPages) * 100 : 0;
         updateSliderPosition(percentage);
         
-        // Update tooltip
+        // update tooltip
         const tooltip = progressControls.querySelector('.progress-tooltip');
         if (tooltip) {
             tooltip.textContent = `Page ${currentPage} of ${totalPages}`;
         }
         
-        // Update progress info
+        // update progress info
         const progressInfo = document.querySelector(`[data-section-id="${sectionId}"] .archived-progress-info .progress-text`);
         if (progressInfo) {
             const postsPerPage = currentConfig.posts_per_page || 4;
-            const totalPosts = totalPages * postsPerPage; // Approximate
+            const totalPosts = totalPages * postsPerPage;
             const showingCount = Math.min(postsPerPage, totalPosts - ((currentPage - 1) * postsPerPage));
-            const yearDropdown = document.querySelector(`[data-section-id="${sectionId}"].archived-year-dropdown`);
+            const yearDropdown = document.querySelector(`[data-section-id="${sectionId}"] .archived-year-dropdown`);
             const currentYear = yearDropdown ? yearDropdown.value : currentConfig.default_year;
             
             progressInfo.textContent = `Showing ${showingCount} of ${totalPosts} articles from ${currentYear}`;
@@ -355,20 +357,20 @@ window.ArchivedNews = (function() {
     }
     
     function showLoadingState() {
-        const gridContainer = document.querySelector(`#${sectionId}-grid`);
-        if (gridContainer) {
-            gridContainer.classList.add('loading');
+        const wrapper = document.querySelector(`[data-section-id="${sectionId}"]`);
+        if (wrapper) {
+            wrapper.classList.add('loading');
         }
     }
     
     function hideLoadingState() {
-        const gridContainer = document.querySelector(`#${sectionId}-grid`);
-        if (gridContainer) {
-            gridContainer.classList.remove('loading');
+        const wrapper = document.querySelector(`[data-section-id="${sectionId}"]`);
+        if (wrapper) {
+            wrapper.classList.remove('loading');
         }
     }
     
-    // Public API
+    // public API
     return {
         init: init,
         loadContent: loadContent,
@@ -376,7 +378,7 @@ window.ArchivedNews = (function() {
     };
 })();
 
-// Auto-initialize if wrapper exists
+// auto-initialize if wrapper exists
 document.addEventListener('DOMContentLoaded', function() {
     const wrapper = document.querySelector('.archived-news-wrapper');
     if (wrapper && wrapper.dataset.sectionId) {

@@ -13,12 +13,12 @@ get_header(); ?>
     <?php if (have_posts()) : ?>
         <?php while (have_posts()) : the_post(); ?>
             <?php
-            // Get post data
+            // get post data
             $post_id = get_the_ID();
             $featured_image = get_the_post_thumbnail_url($post_id, 'large');
             $post_views = get_post_meta($post_id, 'post_views_count', true) ?: 0;
             
-            // Track this post view
+            // track this post view
             if (!is_user_logged_in() || !current_user_can('edit_posts')) {
                 $views = intval($post_views);
                 $views++;
@@ -26,7 +26,7 @@ get_header(); ?>
                 $post_views = $views;
             }
             
-            // Format views count
+            // format views count
             function format_single_views_count($views) {
                 $views = intval($views);
                 if ($views >= 1000000) {
@@ -145,7 +145,7 @@ get_header(); ?>
 </div>
 
 <script>
-// Print functionality for the print button
+// print functionality for the print button
 document.addEventListener('DOMContentLoaded', function() {
     const printButton = document.querySelector('.btn-print-article');
     if (printButton) {
@@ -155,16 +155,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Go back functionality for both go back buttons
+    // go back functionality for both go back buttons
     const goBackButtons = document.querySelectorAll('.btn-go-back, .btn-go-back-end');
     goBackButtons.forEach(function(button) {
         button.addEventListener('click', function(e) {
             e.preventDefault();
-            // Check if there's a previous page in history
+            // check if there's a previous page in history
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                // Fallback to home page if no history
+                // fallback to home page if no history
                 window.location.href = '/';
             }
         });

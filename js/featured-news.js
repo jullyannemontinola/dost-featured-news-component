@@ -15,7 +15,7 @@ window.FeaturedNews = (function() {
     let isLoading = false;
     
     function init() {
-        // Get the featured posts data
+        // get the featured posts data
         const wrapper = document.querySelector('.featured-news-wrapper');
         if (!wrapper) {
             console.log('Featured news wrapper not found');
@@ -25,7 +25,7 @@ window.FeaturedNews = (function() {
         try {
             featuredPosts = JSON.parse(wrapper.dataset.featuredPosts || '[]');
             
-            // Get the detailed post data if available
+            // get the detailed post data if available
             if (wrapper.dataset.postsData) {
                 const postsArray = JSON.parse(wrapper.dataset.postsData);
                 postsData = {};
@@ -35,13 +35,11 @@ window.FeaturedNews = (function() {
             }
         } catch (e) {
             console.error('Error parsing featured posts data:', e);
-            // Use demo data for testing
-            featuredPosts = [1, 2, 3, 4, 5];
-            initializeDemoData();
+            featuredPosts = [];
         }
         
+        // use demo data if no posts available
         if (featuredPosts.length === 0) {
-            // Use demo data for testing
             featuredPosts = [1, 2, 3, 4, 5];
             initializeDemoData();
         }
@@ -49,10 +47,10 @@ window.FeaturedNews = (function() {
         console.log('Featured posts:', featuredPosts);
         console.log('Posts data:', postsData);
         
-        // Initialize event listeners
+        // initialize event listeners
         bindEvents();
         
-        // Set initial current story
+        // set initial current story
         updateCurrentStory(0);
     }
     
@@ -97,16 +95,13 @@ window.FeaturedNews = (function() {
     }
     
     function bindEvents() {
-        // Navigation chevron buttons
+        // navigation chevron buttons
         const prevBtn = document.querySelector('.hero-nav-prev');
         const nextBtn = document.querySelector('.hero-nav-next');
-        
-        console.log('Binding events to navigation buttons:', { prevBtn, nextBtn });
         
         if (prevBtn) {
             prevBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log('Previous button clicked');
                 navigateStory('prev');
             });
         }
@@ -114,19 +109,16 @@ window.FeaturedNews = (function() {
         if (nextBtn) {
             nextBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log('Next button clicked');
                 navigateStory('next');
             });
         }
         
-        // Story item clicks in sidebar
+        // story item clicks in sidebar
         const storyItems = document.querySelectorAll('.story-item');
-        console.log('Found story items:', storyItems.length);
         
         storyItems.forEach((item, index) => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log('Story item clicked:', index);
                 if (!isLoading) {
                     updateCurrentStory(index);
                 }
@@ -155,26 +147,26 @@ window.FeaturedNews = (function() {
         currentIndex = index;
         const postId = featuredPosts[index];
         
-        // Update hero section via AJAX
+        // update hero section via AJAX
         updateHeroSection(postId);
         
-        // Update sidebar highlighting
+        // update sidebar highlighting
         updateSidebarHighlight(index);
     }
     
     function updateHeroSection(postId) {
-        // Show loading state
+        // show loading state
         const heroSection = document.querySelector('.hero-section');
         if (heroSection) {
             heroSection.classList.add('loading');
         }
         
-        // Check if we have WordPress AJAX available
+        // check if we have WordPress AJAX available
         const ajaxUrl = window.featuredNewsAjax?.ajaxurl || window.ajaxurl;
         const nonce = window.featuredNewsAjax?.nonce || window.featuredNewsNonce;
         
         if (ajaxUrl && nonce) {
-            // Make AJAX request to get real post data
+            // make AJAX request to get real post data
             const formData = new FormData();
             formData.append('action', 'get_featured_post_data');
             formData.append('post_id', postId);
@@ -190,29 +182,24 @@ window.FeaturedNews = (function() {
                     updateHeroContent(data.data);
                 } else {
                     console.error('Error loading post data:', data.message);
-                    // Fallback to demo data
                     updateHeroWithDemoData();
                 }
             })
             .catch(error => {
                 console.error('AJAX error:', error);
-                // Fallback to demo data
                 updateHeroWithDemoData();
             })
             .finally(() => {
-                isLoading = false;
-                if (heroSection) {
-                    heroSection.classList.remove('loading');
-                }
+                finishLoading();
             });
         } else {
-            // Fallback to demo data if WordPress AJAX is not available
+            // fallback to demo data if WordPress AJAX is not available
             updateHeroWithDemoData();
         }
     }
     
     function updateHeroWithDemoData() {
-        // Use the data we have (either from WordPress or demo)
+        // use the data we have (either from WordPress or demo)
         const data = postsData[currentIndex];
         
         if (data) {
@@ -222,78 +209,70 @@ window.FeaturedNews = (function() {
         }
         
         setTimeout(() => {
-            isLoading = false;
-            const heroSection = document.querySelector('.hero-section');
-            if (heroSection) {
-                heroSection.classList.remove('loading');
-            }
+            finishLoading();
         }, 300);
     }
     
-    function updateHeroContent(postData) {
-        // Update hero image
-        const heroImage = document.querySelector('.hero-image');
-        if (heroImage && postData.image) {
-            heroImage.src = postData.image;
-            heroImage.alt = postData.title;
-        }
-        
-        // Update hero title
-        const heroTitle = document.querySelector('.hero-title');
-        if (heroTitle && postData.title) {
-            heroTitle.textContent = postData.title;
-        }
-        
-        // Update hero date
-        const heroDate = document.querySelector('.hero-date');
-        if (heroDate && postData.date) {
-            heroDate.textContent = 'Published ' + postData.date;
-        }
-        
-        // Update hero views
-        const heroViews = document.querySelector('.hero-views');
-        if (heroViews && postData.views) {
-            heroViews.textContent = postData.views + ' Views';
-        }
-        
-        // Update hero excerpt
-        const heroExcerpt = document.querySelector('.hero-excerpt p');
-        if (heroExcerpt && postData.excerpt) {
-            heroExcerpt.textContent = postData.excerpt;
-        }
-        
-        // Update read more button
-        const readMoreBtn = document.querySelector('.read-more-button');
-        if (readMoreBtn && postData.url) {
-            readMoreBtn.href = postData.url;
-        }
-        
-        // Update data attribute
+    function finishLoading() {
+        isLoading = false;
         const heroSection = document.querySelector('.hero-section');
         if (heroSection) {
+            heroSection.classList.remove('loading');
+        }
+    }
+    
+    function updateHeroContent(postData) {
+        // define all selectors and their corresponding data properties
+        const updates = [
+            { selector: '.hero-image', property: 'image', attr: 'src', altAttr: 'alt' },
+            { selector: '.hero-title', property: 'title', attr: 'textContent' },
+            { selector: '.hero-date', property: 'date', attr: 'textContent', prefix: 'Published ' },
+            { selector: '.hero-views', property: 'views', attr: 'textContent', suffix: ' Views' },
+            { selector: '.hero-excerpt p', property: 'excerpt', attr: 'textContent' },
+            { selector: '.read-more-button', property: 'url', attr: 'href' }
+        ];
+        
+        // apply updates efficiently
+        updates.forEach(update => {
+            const element = document.querySelector(update.selector);
+            if (element && postData[update.property]) {
+                const value = (update.prefix || '') + postData[update.property] + (update.suffix || '');
+                
+                if (update.attr === 'src' && update.altAttr) {
+                    element.src = postData[update.property];
+                    element.alt = postData.title || '';
+                } else {
+                    element[update.attr] = value;
+                }
+            }
+        });
+        
+        // update data attribute
+        const heroSection = document.querySelector('.hero-section');
+        if (heroSection && postData.id) {
             heroSection.dataset.currentPost = postData.id;
         }
     }
     
     function updateSidebarHighlight(index) {
-        // Remove current highlighting
-        const currentItems = document.querySelectorAll('.story-item.story-current');
-        currentItems.forEach(item => item.classList.remove('story-current'));
-        
-        // Add highlighting to new current item
+        // update all story items in one pass
         const storyItems = document.querySelectorAll('.story-item');
-        if (storyItems[index]) {
-            storyItems[index].classList.add('story-current');
-        }
+        storyItems.forEach((item, i) => {
+            if (i === index) {
+                item.classList.add('story-current');
+            } else {
+                item.classList.remove('story-current');
+            }
+        });
         
-        // Update sidebar data attribute
+        // update sidebar data attribute
         const sidebar = document.querySelector('.featured-stories-list');
         if (sidebar) {
             sidebar.dataset.currentPost = featuredPosts[index];
         }
     }
     
-    // Public API
+    // public API
     return {
         init: init,
         navigateStory: navigateStory,

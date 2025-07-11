@@ -7,12 +7,12 @@
  * @since Government Website Template 2.0
  */
 
-// Get configuration passed from parent
+// get configuration passed from parent
 $config = isset($config) ? $config : array();
 $current_year = isset($_GET['archive_year']) ? sanitize_text_field($_GET['archive_year']) : $config['default_year'];
 $current_page = isset($_GET['archive_page']) ? max(1, intval($_GET['archive_page'])) : 1;
 
-// Get total posts for progress calculation
+// get total posts for progress calculation
 $posts_query = new WP_Query(array(
     'post_type' => $config['post_type'],
     'posts_per_page' => -1,
@@ -29,7 +29,7 @@ $total_posts = $posts_query->found_posts;
 $total_pages = ceil($total_posts / $config['posts_per_page']);
 wp_reset_postdata();
 
-// Calculate progress percentage
+// calculate progress percentage
 $progress_percentage = $total_pages > 0 ? ($current_page / $total_pages) * 100 : 0;
 ?>
 

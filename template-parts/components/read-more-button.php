@@ -7,7 +7,7 @@
  * @since Government Website Template 2.0
  */
 
-// Default button settings, can be overridden by passing $button_args
+// default button settings, can be overridden by passing $button_args
 $default_args = array(
     'url' => isset($post_url) ? $post_url : '#',
     'text' => 'Read More →',
@@ -16,7 +16,7 @@ $default_args = array(
     'aria_label' => 'Read more about this article'
 );
 
-// Merge with passed arguments if any
+// merge with passed arguments if any
 $button_args = isset($button_args) ? array_merge($default_args, $button_args) : $default_args;
 ?>
 
